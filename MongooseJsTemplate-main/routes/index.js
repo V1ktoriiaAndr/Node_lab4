@@ -1,10 +1,15 @@
 const express = require('express');
-
 const router = express.Router();
 
-/* GET home page. */
 router.get('/', (req, res) => {
-    res.render('index', { title: 'Express' });
+    res.status(200).json({
+        status: 'success',
+        message: 'REST API is running!',
+        version: '1.0.0',
+        availableEndpoints: {
+            books: '/api/books'
+        }
+    });
 });
 
 module.exports = router;

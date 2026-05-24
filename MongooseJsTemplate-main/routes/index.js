@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        message: 'REST API is running!',
-        version: '1.0.0',
-        availableEndpoints: {
-            books: '/api/books'
-        }
-    });
+  res.status(200).json({
+    status: 'success',
+    message: 'REST API is running!',
+    version: '1.0.0',
+    availableEndpoints: {
+      books: '/api/books',
+    },
+  });
 });
 
 module.exports = router;

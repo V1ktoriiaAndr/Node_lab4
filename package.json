@@ -4,7 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest --runInBand --forceExit",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --runInBand --forceExit",
+    "lint": "eslint \"MongooseJsTemplate-main/**/*.js\" --fix",
+    "lint:check": "eslint \"MongooseJsTemplate-main/**/*.js\"",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,json,md}\""
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 15000,
+    "testMatch": [
+      "**/MongooseJsTemplate-main/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "MongooseJsTemplate-main/controllers/**/*.js",
+      "MongooseJsTemplate-main/models/**/*.js",
+      "MongooseJsTemplate-main/routes/**/*.js",
+      "MongooseJsTemplate-main/config/**/*.js",
+      "!MongooseJsTemplate-main/config/swagger.config.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"],
+    "roots": ["<rootDir>/MongooseJsTemplate-main"]
   },
   "keywords": [],
   "author": "",
@@ -18,9 +43,5 @@
     "morgan": "^1.10.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.6.2"
   }
 }

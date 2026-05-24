@@ -16,7 +16,7 @@ Code linters: [eslint](https://eslint.org/) with pluggable [Prettier](https://gi
 
 - run: `npm run lint`
 - fix JS errors: `lint:fix`
-  Eslint configuration file: [here](.eslintrc.json)
+  Eslint configuration file: [here](../.eslintrc.js)
 
 ### Testing
 

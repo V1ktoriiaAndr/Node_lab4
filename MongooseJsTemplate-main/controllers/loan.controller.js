@@ -1,15 +1,15 @@
-const Loan = require('../models/Loan'); // ️ Заміни на '../models/Book', якщо сутність називається Book
+const Loan = require('../models/Loan');
 
 /**
  * @swagger
  * tags:
  *   name: Loans
- *   description: Операції з кредитами (Loans)
+ *   description: Операції з кредитами
  */
 
 /**
  * @swagger
- * /users:
+ * /api/loans:
  *   get:
  *     summary: Отримати всі кредити
  *     tags: [Loans]
@@ -23,22 +23,27 @@ const Loan = require('../models/Loan'); // ️ Заміни на '../models/Book
  *               properties:
  *                 success: { type: boolean, example: true }
  *                 count: { type: integer, example: 2 }
- *                 data: { type: array, items: { type: object } }
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/Loan' }
  *       500:
  *         description: Помилка сервера
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
  */
 const getLoans = async (req, res) => {
-    try {
-        const loans = await Loan.find().sort({ createdAt: -1 });
-        res.status(200).json({ success: true, count: loans.length, data: loans });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
+  try {
+    const loans = await Loan.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, count: loans.length, data: loans });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 /**
  * @swagger
- * /users:
+ * /api/loans/new:
  *   post:
  *     summary: Створити новий кредит
  *     tags: [Loans]
@@ -48,40 +53,40 @@ const getLoans = async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - client_id
- *               - loan_type_id
- *               - loan_amount
+ *             required: [client_id, loan_type_id, loan_amount]
  *             properties:
  *               client_id: { type: string, example: "652a1b2c1234567890abcdef" }
  *               loan_type_id: { type: string, example: "652a1b3d1234567890fedcba" }
  *               loan_amount: { type: number, example: 150000.00 }
- *               issue_date: { type: string, format: date-time, example: "2024-01-15T10:00:00.000Z" }
+ *               issue_date: { type: string, format: date-time }
  *     responses:
  *       201:
- *         description: Кредит успішно створено
+ *         description: Кредит створено
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 success: { type: boolean, example: true }
- *                 data: { type: object }
+ *                 data: { $ref: '#/components/schemas/Loan' }
  *       400:
  *         description: Помилка валідації
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
  */
 const addLoan = async (req, res) => {
-    try {
-        const newLoan = await Loan.create(req.body);
-        res.status(201).json({ success: true, data: newLoan });
-    } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
-    }
+  try {
+    const loan = await Loan.create(req.body);
+    res.status(201).json({ success: true, data: loan });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/loans/{id}:
  *   delete:
  *     summary: Видалити кредит (з логуванням)
  *     tags: [Loans]
@@ -90,7 +95,6 @@ const addLoan = async (req, res) => {
  *         name: id
  *         required: true
  *         schema: { type: string }
- *         description: MongoDB ObjectId кредиту
  *     responses:
  *       200:
  *         description: Кредит видалено
@@ -101,24 +105,25 @@ const addLoan = async (req, res) => {
  *               properties:
  *                 success: { type: boolean, example: true }
  *                 message: { type: string, example: "Loan deleted" }
- *                 data: { type: object }
+ *                 data: { $ref: '#/components/schemas/Loan' }
  *       404:
  *         description: Кредит не знайдено
- *       500:
- *         description: Помилка сервера
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
  */
 const deleteLoan = async (req, res) => {
-    try {
-        const deletedLoan = await Loan.findByIdAndDelete(req.params.id);
+  try {
+    const loan = await Loan.findByIdAndDelete(req.params.id);
 
-        if (!deletedLoan) {
-            return res.status(404).json({ success: false, message: 'Loan not found' });
-        }
-
-        res.status(200).json({ success: true, message: 'Loan deleted', data: deletedLoan });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+    if (!loan) {
+      return res.status(404).json({ success: false, message: 'Loan not found' });
     }
+
+    res.status(200).json({ success: true, message: 'Loan deleted', data: loan });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 module.exports = { getLoans, addLoan, deleteLoan };

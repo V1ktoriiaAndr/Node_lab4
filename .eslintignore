@@ -1,0 +1,7 @@
+node_modules/
+coverage/
+public/
+views/
+*.min.js
+*.log
+.env

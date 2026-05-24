@@ -6,110 +6,98 @@ const options = {
     info: {
       title: 'Loans API',
       version: '1.0.0',
-      description: 'REST API для роботи з кредитами',
+      description: 'Operations with loans',
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Development server',
+        url: 'http://localhost:3001',
       },
     ],
-    components: {
-      schemas: {
-        Loan: {
-          type: 'object',
-          required: ['client_id', 'loan_type_id', 'loan_amount'],
-          properties: {
-            _id: {
-              type: 'string',
-              description: 'MongoDB ObjectId',
-              example: '652a1b2c1234567890abcdef',
-            },
-            client_id: {
-              type: 'string',
-              description: 'ID клієнта',
-              example: '652a1b2c1234567890abcdef',
-            },
-            loan_type_id: {
-              type: 'string',
-              description: 'ID типу кредиту',
-              example: '652a1b3d1234567890fedcba',
-            },
-            loan_amount: {
-              type: 'number',
-              description: 'Сума кредиту',
-              example: 150000.0,
-            },
-            issue_date: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Дата видачі',
-            },
-            scheduled_return_date: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Запланована дата повернення',
-            },
-            actual_return_date: {
-              type: 'string',
-              format: 'date-time',
-              nullable: true,
-              description: 'Фактична дата повернення',
-            },
-            payments: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  payment_date: { type: 'string', format: 'date-time' },
-                  amount: { type: 'number' },
+    paths: {
+      '/api/loans': {
+        get: {
+          tags: ['Loans'],
+          summary: 'Get all loans',
+          responses: {
+            '200': { description: 'Success' },
+          },
+        },
+        post: {
+          tags: ['Loans'],
+          summary: 'Create a new loan',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['client_id', 'loan_type_id', 'loan_amount', 'scheduled_return_date'],
+                  properties: {
+                    client_id: { type: 'string', example: '652a1b2c1234567890abcdef' },
+                    loan_type_id: { type: 'string', example: '652a1b3d1234567890fedcba' },
+                    loan_amount: { type: 'number', example: 15000 },
+                    scheduled_return_date: { type: 'string', format: 'date-time', example: '2026-12-31T23:59:59.000Z' },
+                  },
                 },
               },
             },
-            fines: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  accrual_date: { type: 'string', format: 'date-time' },
-                  amount: { type: 'number' },
-                  reason: { type: 'string' },
-                  payment_date: { type: 'string', format: 'date-time' },
+          },
+          responses: {
+            '201': { description: 'Created' },
+          },
+        },
+      },
+      '/api/loans/{id}': {
+        delete: {
+          tags: ['Loans'],
+          summary: 'Delete a loan',
+          parameters: [
+            {
+              in: 'path',
+              name: 'id',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {
+            '200': { description: 'Deleted' },
+          },
+        },
+        patch: {
+          tags: ['Loans'],
+          summary: 'Update a loan',
+          parameters: [
+            {
+              in: 'path',
+              name: 'id',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    loan_amount: { type: 'number', example: 20000 },
+                    actual_return_date: { type: 'string', format: 'date-time' },
+                  },
                 },
               },
             },
-            createdAt: {
-              type: 'string',
-              format: 'date-time',
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time',
-            },
           },
-        },
-        DeletionLog: {
-          type: 'object',
-          properties: {
-            _id: { type: 'string' },
-            documentId: { type: 'string', description: 'ID видаленого документа' },
-            modelType: { type: 'string', example: 'Loan' },
-            deletedAt: { type: 'string', format: 'date-time' },
-          },
-        },
-        Error: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean', example: false },
-            message: { type: 'string', example: 'Error message' },
-            stack: { type: 'string' },
+          responses: {
+            '200': { description: 'Updated' },
           },
         },
       },
     },
   },
-  apis: ['./routes/*.js', './controllers/*.js'],
+  apis: [],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
+
 module.exports = swaggerSpec;

@@ -8,23 +8,25 @@
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --runInBand --forceExit",
-    "lint": "eslint \"src/**/*.js\" --fix",
-    "lint:check": "eslint \"src/**/*.js\"",
+    "lint": "eslint \"src/**/*.js\" \"app.js\" --fix",
+    "lint:check": "eslint \"src/**/*.js\" \"app.js\"",
     "format": "prettier --write \"**/*.{js,json,md}\"",
-    "format:check": "prettier --check \"**/*.{js,json,md}\""
+    "format:check": "prettier --check \"**/*.{js,json,md}\"",
+    "lint:fix": "npm run format && npm run lint"
   },
   "jest": {
     "testEnvironment": "node",
     "testTimeout": 15000,
     "collectCoverageFrom": [
       "src/**/*.js",
-      "src/**/*.js",
-      "src/**/*.js",
-      "src/**/*.js",
       "!src/config/swagger.config.js"
     ],
     "coverageDirectory": "coverage",
-    "coverageReporters": ["text", "lcov", "html"]
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
   },
   "dependencies": {
     "cookie-parser": "~1.4.6",

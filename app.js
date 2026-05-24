@@ -4,28 +4,28 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger.config');
+const swaggerSpec = require('./src/config/swagger.config');
 
-const indexRouter = require('./routes');
-const loansRouter = require('./routes/loans');
+const indexRouter = require('./src/routes');
+const loansRouter = require('./src/routes/loans');
 
-const connectDB = require('./config/db.config');
+const connectDB = require('./src/config/db.config');
 
 connectDB().catch((err) => {
-  console.error('Failed to connect to MongoDB:', err);
+  console.error(err);
   process.exit(1);
 });
 
 const app = express();
 
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'src', 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/loans', loansRouter);
@@ -38,10 +38,10 @@ app.use((req, res) => {
   });
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   const { message = 'Internal Server Error', status = 500, stack } = err || {};
 
-  console.error('Error:', message);
+  console.error(message);
 
   res.status(status).json({
     success: false,
@@ -55,7 +55,6 @@ if (require.main === module) {
 
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Swagger docs: http://localhost:${PORT}/api-docs`);
   });
 }
 

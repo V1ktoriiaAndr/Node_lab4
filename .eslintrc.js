@@ -13,11 +13,5 @@ module.exports = {
     'no-console': 'off',
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
   },
-  ignorePatterns: [
-    'node_modules/',
-    'coverage/',
-    'public/',
-    'views/',
-    'src/node_modules/',
-  ],
+  ignorePatterns: ['node_modules/', 'coverage/', 'public/', 'views/', 'src/node_modules/'],
 };

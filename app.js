@@ -4,12 +4,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./MongooseJsTemplate-main/config/swagger.config');
+const swaggerSpec = require('./config/swagger.config');
 
-const indexRouter = require('./MongooseJsTemplate-main/routes');
-const loansRouter = require('./MongooseJsTemplate-main/routes/loans');
+const indexRouter = require('./routes');
+const loansRouter = require('./routes/loans');
 
-const connectDB = require('./MongooseJsTemplate-main/config/db.config');
+const connectDB = require('./config/db.config');
 
 connectDB().catch((err) => {
   console.error('Failed to connect to MongoDB:', err);
